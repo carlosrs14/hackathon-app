@@ -4,13 +4,6 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-// Importa tus modelos aquí
-import '../models/usuario.dart';
-import '../models/evento.dart';
-import '../models/antecedente.dart';
-import '../models/tipo_evento.dart';
-import '../models/sintoma.dart';
-import '../models/ubicacion.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();

@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:hackatonapp/providers/event_provider.dart';
+import 'package:hackatonapp/providers/history_provider.dart';
+import 'package:hackatonapp/providers/symptom_provider.dart';
+import 'package:hackatonapp/providers/user_provider.dart';
 import 'package:hackatonapp/screens/home_screen.dart';
 import 'package:hackatonapp/screens/profile_screen.dart';
 import 'package:hackatonapp/screens/registration_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => SymptomProvider()),
+        ChangeNotifierProvider(create: (_) => EventProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

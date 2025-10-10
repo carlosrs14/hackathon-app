@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hackatonapp/models/sintoma.dart';
+import 'package:hackatonapp/providers/event_provider.dart';
+import 'package:hackatonapp/providers/symptom_provider.dart';
+import 'package:provider/provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -12,42 +15,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   int _currentStep = 0;
   final Map<int, bool> _answers = {};
 
-  // TODO: Cargar síntomas desde la base de datos
-  final List<Sintoma> _sintomas = [
-    Sintoma(id: 1, nombre: 'Fiebre', pregunta: '¿Ha tenido fiebre alta en los últimos días?'),
-    Sintoma(id: 2, nombre: 'Dolor de cabeza', pregunta: '¿Siente un fuerte dolor de cabeza?'),
-    Sintoma(id: 3, nombre: 'Dolor muscular', pregunta: '¿Tiene dolor en los músculos y articulaciones?'),
-    Sintoma(id: 4, nombre: 'Sarpullido', pregunta: '¿Ha notado la aparición de sarpullido en su piel?'),
-    Sintoma(id: 5, nombre: 'Malestar general', pregunta: '¿Siente un malestar general o debilidad?'),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Stepper(
-      currentStep: _currentStep,
-      onStepContinue: () {
-        if (_currentStep < _sintomas.length - 1) {
-          setState(() {
-            _currentStep++;
-          });
-        } else {
-          // Lógica para guardar
-          _saveCase();
-        }
+    // Usamos Consumer para escuchar los cambios en SymptomProvider
+    return Consumer<SymptomProvider>(
+      builder: (context, symptomProvider, child) {
+        final sintomas = symptomProvider.sintomas;
+
+        return Stepper(
+          currentStep: _currentStep,
+          onStepContinue: () {
+            if (_currentStep < sintomas.length - 1) {
+              setState(() {
+                _currentStep++;
+              });
+            } else {
+              _saveCase(sintomas);
+            }
+          },
+          onStepCancel: () {
+            if (_currentStep > 0) {
+              setState(() {
+                _currentStep--;
+              });
+            }
+          },
+          steps: _buildSteps(sintomas),
+        );
       },
-      onStepCancel: () {
-        if (_currentStep > 0) {
-          setState(() {
-            _currentStep--;
-          });
-        }
-      },
-      steps: _buildSteps(),
     );
   }
 
-  List<Step> _buildSteps() {
-    return _sintomas.asMap().entries.map((entry) {
+  List<Step> _buildSteps(List<Sintoma> sintomas) {
+    return sintomas.asMap().entries.map((entry) {
       int idx = entry.key;
       Sintoma sintoma = entry.value;
 
@@ -94,13 +94,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }).toList();
   }
 
-  void _saveCase() {
-    // TODO: Implementar la lógica para guardar en la base de datos
-    print('Guardando caso...');
-    print('Respuestas: $_answers');
+  void _saveCase(List<Sintoma> sintomas) {
+    // Usamos context.read para llamar a un método del provider
+    context.read<EventProvider>().addEvent(_answers);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Caso registrado con éxito (simulación).')),
+      const SnackBar(content: Text('Caso registrado con éxito.')),
     );
 
     // Resetear el formulario
