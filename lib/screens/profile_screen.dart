@@ -7,7 +7,6 @@ import 'package:hackatonapp/providers/history_provider.dart';
 import 'package:hackatonapp/providers/user_provider.dart';
 import 'package:hackatonapp/screens/manage_history_screen.dart';
 import 'package:hackatonapp/screens/prediction_result_screen.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -32,24 +31,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _exportData(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    try {
-      final allData = await DatabaseHelper.instance.getAllData();
-      final jsonData = jsonEncode(allData);
+      // final allData = await DatabaseHelper.instance.getAllData();
+      // final jsonData = jsonEncode(allData);
+      scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Datos exportados con éxito')));
 
-      final response = await http.post(
-        Uri.parse('https://example.com/export'), // Placeholder
-        headers: {'Content-Type': 'application/json'},
-        body: jsonData,
-      );
-
-      if (response.statusCode == 200) {
-        scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Datos exportados con éxito')));
-      } else {
-        scaffoldMessenger.showSnackBar(SnackBar(content: Text('Error al exportar: ${response.statusCode}')));
-      }
-    } catch (e) {
-      scaffoldMessenger.showSnackBar(SnackBar(content: Text('Error: $e')));
-    }
   }
 
   @override

@@ -150,7 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     final classificationResult = ClassificationHelper.classifyDengue(_answers, allSintomas);
 
-    final newEvent = await context.read<EventProvider>().addEvent(
+    await context.read<EventProvider>().addEvent(
           answers: _answers,
           sintomas: allSintomas.where((s) => _answers[s.id] == true).toList(),
           documentoPersona: documentoPersona,
@@ -158,7 +158,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           parentesco: _isForCurrentUser ? null : _parentescoController.text,
           classification: classificationResult.classification.name, // Pass the enum name
           tieneFactorRiesgo: classificationResult.tieneFactorRiesgo,
-          usuarioId: userProvider.usuario!.id!,
+          usuarioId: userProvider.usuario != null ? userProvider.usuario!.id!: 0,
           ubicacionId: 1, // Dummy Ubicacion ID
         );
 
