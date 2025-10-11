@@ -1,9 +1,13 @@
+import 'package:hackatonapp/models/sintoma.dart';
+
 class Evento {
   final int? id;
   final int usuarioId;
   final int? tipoEventoId;
   final int ubicacionId;
   final DateTime fecha;
+  final List<Sintoma> sintomas;
+  final bool reportado;
 
   Evento({
     this.id,
@@ -11,6 +15,8 @@ class Evento {
     this.tipoEventoId,
     required this.ubicacionId,
     required this.fecha,
+    required this.sintomas,
+    this.reportado = false
   });
 
   Map<String, dynamic> toMap() {

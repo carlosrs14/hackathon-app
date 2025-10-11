@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
       Disease('Zika', 'Información sobre el Zika...'),
       Disease('Chikungunya', 'Información sobre el Chikungunya...'),
       Disease('Malaria', 'Información sobre la Malaria...'),
+      Disease('Chagas', 'Información sobre la Malaria...'),
     ];
 
     return ListView.builder(

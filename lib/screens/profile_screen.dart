@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackatonapp/providers/event_provider.dart';
 import 'package:hackatonapp/providers/history_provider.dart';
 import 'package:hackatonapp/providers/user_provider.dart';
+import 'package:hackatonapp/screens/prediction_result_screen.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -84,7 +85,14 @@ class ProfileScreen extends StatelessWidget {
                     subtitle: Text('Registrado el: ${evento.fecha.day}/${evento.fecha.month}/${evento.fecha.year}'),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      // TODO: Navegar a una pantalla de detalle del evento
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PredictionResultScreen(
+                            evento: evento,
+                            sintomasPositivos: evento.sintomas,
+                          ),
+                        ),
+                      );
                     },
                   ),
                 );

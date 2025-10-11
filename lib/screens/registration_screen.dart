@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackatonapp/models/sintoma.dart';
 import 'package:hackatonapp/providers/event_provider.dart';
 import 'package:hackatonapp/providers/symptom_provider.dart';
+import 'package:hackatonapp/screens/prediction_result_screen.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -17,7 +18,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos Consumer para escuchar los cambios en SymptomProvider
     return Consumer<SymptomProvider>(
       builder: (context, symptomProvider, child) {
         final sintomas = symptomProvider.sintomas;
@@ -95,17 +95,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _saveCase(List<Sintoma> sintomas) {
-    // Usamos context.read para llamar a un método del provider
-    context.read<EventProvider>().addEvent(_answers);
+    final newEvent = context.read<EventProvider>().addEvent(_answers, sintomas);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Caso registrado con éxito.')),
-    );
-
-    // Resetear el formulario
     setState(() {
       _currentStep = 0;
       _answers.clear();
     });
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PredictionResultScreen(
+          evento: newEvent,
+          sintomasPositivos: newEvent.sintomas,
+        ),
+      ),
+    );
   }
 }
