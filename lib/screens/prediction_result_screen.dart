@@ -34,6 +34,30 @@ class PredictionResultScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
+                      'Información del Paciente',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 8),
+                    if (evento.es_usuario_principal)
+                      const Text('Caso registrado para el usuario principal')
+                    else
+                      Text('Caso registrado para un familiar (Parentesco: ${evento.parentesco ?? 'No especificado'})'),
+                    const SizedBox(height: 8),
+                    Chip(
+                      label: Text('Documento: ${evento.documento_persona}'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
                       'Clasificación Preliminar',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
