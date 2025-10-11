@@ -12,4 +12,12 @@ class Antecedente {
       'descripcion': descripcion,
     };
   }
+
+  factory Antecedente.fromMap(Map<String, dynamic> map) {
+    return Antecedente(
+      id: map['id'],
+      usuarioId: map['usuarioId'],
+      descripcion: map['descripcion'],
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'package:hackatonapp/helpers/database_helper.dart';
 import 'package:hackatonapp/providers/event_provider.dart';
 import 'package:hackatonapp/providers/history_provider.dart';
 import 'package:hackatonapp/providers/user_provider.dart';
+import 'package:hackatonapp/screens/manage_history_screen.dart';
 import 'package:hackatonapp/screens/prediction_result_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -42,46 +43,54 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.usuario;
+
+    if (user != null) {
+      // Load antecedents when the user is available
+      Provider.of<HistoryProvider>(context, listen: false).loadAntecedentes(user.id!);
+    }
+
     return ListView(
       children: [
         // --- User Info Section ---
-        Consumer<UserProvider>(
-          builder: (context, userProvider, child) {
-            final user = userProvider.usuario;
-            if (user == null) {
-              return const ListTile(title: Text('Cargando usuario...'));
-            }
-            return Card(
-              margin: const EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: const Icon(Icons.person_pin_rounded, size: 40),
-                title: Text("Informacion personal", style: Theme.of(context).textTheme.headlineSmall),
-                subtitle: Text('Edad: ${user.edad} años'),
-              ),
-            );
-          },
-        ),
+        if (user == null)
+          const ListTile(title: Text('Cargando usuario...'))
+        else
+          Card(
+            margin: const EdgeInsets.all(8.0),
+            child: ListTile(
+              leading: const Icon(Icons.person_pin_rounded, size: 40),
+              title: Text("Cédula: ${user.cedula}", style: Theme.of(context).textTheme.headlineSmall),
+              subtitle: Text('Edad: ${user.edad} años'),
+            ),
+          ),
 
         const Divider(),
 
         // --- Medical History Section ---
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text('Mis Antecedentes', style: Theme.of(context).textTheme.titleLarge),
+        ListTile(
+          title: Text('Mis Antecedentes', style: Theme.of(context).textTheme.titleLarge),
+          trailing: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ManageHistoryScreen()));
+            },
+            child: const Text('Gestionar'),
+          ),
         ),
         Consumer<HistoryProvider>(
           builder: (context, historyProvider, child) {
-            final antecedentes = historyProvider.antecedentes;
-            if (antecedentes.isEmpty) {
+            final antecedents = historyProvider.antecedentes;
+            if (antecedents.isEmpty) {
               return const Center(child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text('No hay antecedentes registrados.'),
               ));
             }
             return Column(
-              children: antecedentes.map((antecedente) => ListTile(
+              children: antecedents.map((antecedent) => ListTile(
                 leading: const Icon(Icons.medical_information),
-                title: Text(antecedente.descripcion),
+                title: Text(antecedent.descripcion),
               )).toList(),
             );
           },

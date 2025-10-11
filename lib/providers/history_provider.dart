@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackatonapp/helpers/database_helper.dart';
 import 'package:hackatonapp/models/antecedente.dart';
 
 class HistoryProvider with ChangeNotifier {
@@ -6,26 +7,23 @@ class HistoryProvider with ChangeNotifier {
 
   List<Antecedente> get antecedentes => _antecedentes;
 
-  HistoryProvider() {
-    fetchHistory();
-  }
-
-  void fetchHistory() {
-    // In a real app, this would fetch from the database
-    _antecedentes = [
-      Antecedente(id: 1, usuarioId: 1, descripcion: 'Hipertensión'),
-      Antecedente(id: 2, usuarioId: 1, descripcion: 'Asma'),
-    ];
+  Future<void> loadAntecedentes(int usuarioId) async {
+    _antecedentes = await DatabaseHelper.instance.getAntecedentes(usuarioId);
     notifyListeners();
   }
 
-  void addAntecedente(String descripcion) {
-    final newAntecedente = Antecedente(
-      id: _antecedentes.length + 1,
-      usuarioId: 1, // Dummy user ID
-      descripcion: descripcion,
-    );
-    _antecedentes.add(newAntecedente);
-    notifyListeners();
+  Future<void> addAntecedente(Antecedente antecedente) async {
+    await DatabaseHelper.instance.insertAntecedente(antecedente);
+    await loadAntecedentes(antecedente.usuarioId);
+  }
+
+  Future<void> updateAntecedente(Antecedente antecedente) async {
+    await DatabaseHelper.instance.updateAntecedente(antecedente);
+    await loadAntecedentes(antecedente.usuarioId);
+  }
+
+  Future<void> deleteAntecedente(int id, int usuarioId) async {
+    await DatabaseHelper.instance.deleteAntecedente(id);
+    await loadAntecedentes(usuarioId);
   }
 }

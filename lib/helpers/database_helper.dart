@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 
+import 'package:hackatonapp/models/antecedente.dart';
 import 'package:hackatonapp/models/ubicacion.dart';
 import 'package:hackatonapp/models/usuario.dart';
 
@@ -121,6 +122,40 @@ class DatabaseHelper {
   Future<int> insertUbicacion(Ubicacion ubicacion) async {
     final db = await instance.database;
     return await db.insert('ubicaciones', ubicacion.toMap());
+  }
+
+  // Antecedente methods
+  Future<int> insertAntecedente(Antecedente antecedente) async {
+    final db = await instance.database;
+    return await db.insert('antecedentes', antecedente.toMap());
+  }
+
+  Future<List<Antecedente>> getAntecedentes(int usuarioId) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query('antecedentes', where: 'usuarioId = ?', whereArgs: [usuarioId]);
+
+    return List.generate(maps.length, (i) {
+      return Antecedente.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateAntecedente(Antecedente antecedente) async {
+    final db = await instance.database;
+    return await db.update(
+      'antecedentes',
+      antecedente.toMap(),
+      where: 'id = ?',
+      whereArgs: [antecedente.id],
+    );
+  }
+
+  Future<int> deleteAntecedente(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      'antecedentes',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   // Export methods
