@@ -1,7 +1,7 @@
 class Sintoma {
   final int? id;
   final String nombre;
-  final String pregunta; // e.g., "¿Tiene fiebre?"
+  final String pregunta;
 
   Sintoma({this.id, required this.nombre, required this.pregunta});
 

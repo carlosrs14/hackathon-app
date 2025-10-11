@@ -92,9 +92,6 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.person),
             label: 'Perfil',
           ),
-          // BottomNavigationBarItem(
-          // icon: Icon(Icons.abc)
-          // )
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

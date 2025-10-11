@@ -98,7 +98,6 @@ class DatabaseHelper {
     ''');
   }
 
-  // User methods
   Future<int> insertUser(Usuario usuario) async {
     final db = await instance.database;
     return await db.insert('usuarios', usuario.toMap());
@@ -118,13 +117,11 @@ class DatabaseHelper {
     return null;
   }
 
-  // Ubicacion methods
   Future<int> insertUbicacion(Ubicacion ubicacion) async {
     final db = await instance.database;
     return await db.insert('ubicaciones', ubicacion.toMap());
   }
 
-  // Antecedente methods
   Future<int> insertAntecedente(Antecedente antecedente) async {
     final db = await instance.database;
     return await db.insert('antecedentes', antecedente.toMap());
@@ -158,7 +155,6 @@ class DatabaseHelper {
     );
   }
 
-  // Export methods
   Future<Map<String, List<Map<String, dynamic>>>> getAllData() async {
     final db = await instance.database;
     final tables = ['usuarios', 'ubicaciones', 'tipos_evento', 'eventos', 'antecedentes', 'sintomas', 'evento_sintomas'];

@@ -15,7 +15,6 @@ class _ManageHistoryScreenState extends State<ManageHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Load antecedents when the screen is initialized
     final user = Provider.of<UserProvider>(context, listen: false).usuario;
     if (user != null) {
       Provider.of<HistoryProvider>(context, listen: false).loadAntecedentes(user.id!);

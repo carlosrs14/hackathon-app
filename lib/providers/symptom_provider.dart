@@ -10,7 +10,6 @@ class SymptomProvider with ChangeNotifier {
     fetchSymptoms();
   }
 
-  // In a real app, this would fetch from the database
   void fetchSymptoms() {
     _sintomas = [
       Sintoma(id: 1, nombre: 'Fiebre', pregunta: '¿Ha tenido fiebre alta en los últimos días?'),

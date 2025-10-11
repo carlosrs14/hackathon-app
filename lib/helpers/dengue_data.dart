@@ -22,7 +22,6 @@ class DiseaseData {
   });
 }
 
-
 DiseaseData? findByName(String name) {
   for (DiseaseData d in diseaseData()) {
     log(d.name);
@@ -74,8 +73,3 @@ List<DiseaseData> diseaseData() {
   return diseases;
 }
 
-// aquí donde estamos pudimos haber tenido dengue y no lo sabemos
-// tanto en el magdalena como el país estamos infestados en el dengue
-
-// política de tratamiento de datos
-//

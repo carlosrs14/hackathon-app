@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         return Stepper(
           currentStep: _currentStep,
           onStepContinue: () {
-            if (_currentStep < sintomas.length) { // Adjusted for the new step
+            if (_currentStep < sintomas.length) {
               setState(() {
                 _currentStep++;
               });
@@ -148,7 +148,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
           ],
         ),
-        isActive: _currentStep >= idx + 1, // Adjusted for the new step
+        isActive: _currentStep >= idx + 1,
         state: _currentStep > idx + 1 || _answers.containsKey(sintoma.id) ? StepState.complete : StepState.indexed,
       );
     }));

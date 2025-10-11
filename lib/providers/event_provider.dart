@@ -24,8 +24,8 @@ class EventProvider with ChangeNotifier {
       ubicacionId: 1, // TODO: Get the real location ID
       fecha: DateTime.now(),
       sintomas: sintomasPositivos,
-      documento_persona: documentoPersona,
-      es_usuario_principal: esUsuarioPrincipal,
+      documentoPersona: documentoPersona,
+      esUsuarioPrincipal: esUsuarioPrincipal,
       parentesco: parentesco,
     );
 

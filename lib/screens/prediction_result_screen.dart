@@ -4,7 +4,7 @@ import 'package:hackatonapp/models/sintoma.dart';
 
 class PredictionResultScreen extends StatelessWidget {
   final Evento evento;
-  final List<Sintoma> sintomasPositivos; // Symptoms answered 'Yes'
+  final List<Sintoma> sintomasPositivos;
 
   const PredictionResultScreen({
     super.key,
@@ -20,7 +20,7 @@ class PredictionResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resultado del Registro #${evento.id}'),
-        automaticallyImplyLeading: false, // Remove back button
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,13 +38,13 @@ class PredictionResultScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
-                    if (evento.es_usuario_principal)
+                    if (evento.esUsuarioPrincipal)
                       const Text('Caso registrado para el usuario principal')
                     else
                       Text('Caso registrado para un familiar (Parentesco: ${evento.parentesco ?? 'No especificado'})'),
                     const SizedBox(height: 8),
                     Chip(
-                      label: Text('Documento: ${evento.documento_persona}'),
+                      label: Text('Documento: ${evento.documentoPersona}'),
                     ),
                   ],
                 ),
@@ -94,11 +94,7 @@ class PredictionResultScreen extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Navigate back to the main screen, to the profile tab (index 2)
                 Navigator.of(context).popUntil((route) => route.isFirst);
-                // This is a bit of a hack. A better way would be to use a global key
-                // or a more advanced navigation solution to switch tabs.
-                // For now, we just go back to the root.
               },
               child: const Text('Volver al Inicio'),
             ),

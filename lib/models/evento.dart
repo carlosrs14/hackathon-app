@@ -9,8 +9,8 @@ class Evento {
   final List<Sintoma> sintomas;
   final bool reportado;
 
-  final String documento_persona;
-  final bool es_usuario_principal;
+  final String documentoPersona;
+  final bool esUsuarioPrincipal;
   final String? parentesco;
 
   Evento({
@@ -21,8 +21,8 @@ class Evento {
     required this.fecha,
     required this.sintomas,
     this.reportado = false,
-    required this.documento_persona,
-    required this.es_usuario_principal,
+    required this.documentoPersona,
+    required this.esUsuarioPrincipal,
     this.parentesco,
   });
 
@@ -33,8 +33,8 @@ class Evento {
       'tipoEventoId': tipoEventoId,
       'ubicacionId': ubicacionId,
       'fecha': fecha.toIso8601String(),
-      'documento_persona': documento_persona,
-      'es_usuario_principal': es_usuario_principal ? 1 : 0,
+      'documento_persona': documentoPersona,
+      'es_usuario_principal': esUsuarioPrincipal ? 1 : 0,
       'parentesco': parentesco,
     };
   }
