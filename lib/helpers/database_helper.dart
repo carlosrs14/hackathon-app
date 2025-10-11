@@ -5,6 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 
+import 'package:hackatonapp/models/ubicacion.dart';
+import 'package:hackatonapp/models/usuario.dart';
+
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
@@ -27,7 +30,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE usuarios(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
+        cedula TEXT NOT NULL UNIQUE,
         edad INTEGER NOT NULL
       )
     ''');
@@ -56,6 +59,9 @@ class DatabaseHelper {
         tipoEventoId INTEGER,
         ubicacionId INTEGER NOT NULL,
         fecha TEXT NOT NULL,
+        documento_persona TEXT NOT NULL,
+        es_usuario_principal INTEGER NOT NULL,
+        parentesco TEXT,
         FOREIGN KEY (usuarioId) REFERENCES usuarios(id),
         FOREIGN KEY (tipoEventoId) REFERENCES tipos_evento(id),
         FOREIGN KEY (ubicacionId) REFERENCES ubicaciones(id)
@@ -89,5 +95,45 @@ class DatabaseHelper {
         FOREIGN KEY (sintomaId) REFERENCES sintomas(id)
       )
     ''');
+  }
+
+  // User methods
+  Future<int> insertUser(Usuario usuario) async {
+    final db = await instance.database;
+    return await db.insert('usuarios', usuario.toMap());
+  }
+
+  Future<Usuario?> getUser() async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query('usuarios', limit: 1);
+
+    if (maps.isNotEmpty) {
+      return Usuario(
+        id: maps[0]['id'],
+        cedula: maps[0]['cedula'],
+        edad: maps[0]['edad'],
+      );
+    }
+    return null;
+  }
+
+  // Ubicacion methods
+  Future<int> insertUbicacion(Ubicacion ubicacion) async {
+    final db = await instance.database;
+    return await db.insert('ubicaciones', ubicacion.toMap());
+  }
+
+  // Export methods
+  Future<Map<String, List<Map<String, dynamic>>>> getAllData() async {
+    final db = await instance.database;
+    final tables = ['usuarios', 'ubicaciones', 'tipos_evento', 'eventos', 'antecedentes', 'sintomas', 'evento_sintomas'];
+    final Map<String, List<Map<String, dynamic>>> allData = {};
+
+    for (final table in tables) {
+      final List<Map<String, dynamic>> maps = await db.query(table);
+      allData[table] = maps;
+    }
+
+    return allData;
   }
 }

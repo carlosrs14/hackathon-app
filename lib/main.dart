@@ -6,6 +6,7 @@ import 'package:hackatonapp/providers/user_provider.dart';
 import 'package:hackatonapp/screens/home_screen.dart';
 import 'package:hackatonapp/screens/profile_screen.dart';
 import 'package:hackatonapp/screens/registration_screen.dart';
+import 'package:hackatonapp/screens/auth_wrapper.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      home: const AuthWrapper(),
     );
   }
 }

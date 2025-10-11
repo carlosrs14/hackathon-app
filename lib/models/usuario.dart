@@ -1,14 +1,14 @@
 class Usuario {
   final int? id;
-  final String nombre;
+  final String cedula;
   final int edad;
 
-  Usuario({this.id, required this.nombre, required this.edad});
+  Usuario({this.id, required this.cedula, required this.edad});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nombre': nombre,
+      'cedula': cedula,
       'edad': edad,
     };
   }

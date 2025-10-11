@@ -9,6 +9,10 @@ class Evento {
   final List<Sintoma> sintomas;
   final bool reportado;
 
+  final String documento_persona;
+  final bool es_usuario_principal;
+  final String? parentesco;
+
   Evento({
     this.id,
     required this.usuarioId,
@@ -16,7 +20,10 @@ class Evento {
     required this.ubicacionId,
     required this.fecha,
     required this.sintomas,
-    this.reportado = false
+    this.reportado = false,
+    required this.documento_persona,
+    required this.es_usuario_principal,
+    this.parentesco,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +33,9 @@ class Evento {
       'tipoEventoId': tipoEventoId,
       'ubicacionId': ubicacionId,
       'fecha': fecha.toIso8601String(),
+      'documento_persona': documento_persona,
+      'es_usuario_principal': es_usuario_principal ? 1 : 0,
+      'parentesco': parentesco,
     };
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackatonapp/helpers/database_helper.dart';
 import 'package:hackatonapp/models/usuario.dart';
 
 class UserProvider with ChangeNotifier {
@@ -7,8 +8,12 @@ class UserProvider with ChangeNotifier {
   Usuario? get usuario => _usuario;
 
   UserProvider() {
-    // In a real app, you might load the user from a saved session
-    _usuario = Usuario(id: 1, nombre: 'Usuario de Prueba', edad: 30);
+    loadUser();
+  }
+
+  Future<void> loadUser() async {
+    _usuario = await DatabaseHelper.instance.getUser();
+    notifyListeners();
   }
 
   void updateUser(Usuario newUser) {

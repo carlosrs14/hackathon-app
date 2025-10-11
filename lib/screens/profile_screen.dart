@@ -1,12 +1,44 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hackatonapp/helpers/database_helper.dart';
 import 'package:hackatonapp/providers/event_provider.dart';
 import 'package:hackatonapp/providers/history_provider.dart';
 import 'package:hackatonapp/providers/user_provider.dart';
 import 'package:hackatonapp/screens/prediction_result_screen.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  Future<void> _exportData(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      final allData = await DatabaseHelper.instance.getAllData();
+      final jsonData = jsonEncode(allData);
+
+      // TODO: Replace with your actual endpoint
+      final response = await http.post(
+        Uri.parse('https://example.com/export'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonData,
+      );
+
+      if (response.statusCode == 200) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(content: Text('Datos exportados con éxito')),
+        );
+      } else {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text('Error al exportar: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
               margin: const EdgeInsets.all(8.0),
               child: ListTile(
                 leading: const Icon(Icons.person_pin_rounded, size: 40),
-                title: Text(user.nombre, style: Theme.of(context).textTheme.headlineSmall),
+                title: Text("Informacion personal", style: Theme.of(context).textTheme.headlineSmall),
                 subtitle: Text('Edad: ${user.edad} años'),
               ),
             );
@@ -99,6 +131,22 @@ class ProfileScreen extends StatelessWidget {
               },
             );
           },
+        ),
+
+        const Divider(),
+
+        // --- Export Button ---
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton.icon(
+            onPressed: () => _exportData(context),
+            icon: const Icon(Icons.cloud_upload),
+            label: const Text('Exportar datos'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              textStyle: const TextStyle(fontSize: 18),
+            ),
+          ),
         ),
       ],
     );
