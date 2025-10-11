@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hackatonapp/helpers/classification_helper.dart';
 import 'package:hackatonapp/helpers/database_helper.dart';
 import 'package:hackatonapp/providers/event_provider.dart';
 import 'package:hackatonapp/providers/history_provider.dart';
@@ -9,8 +10,25 @@ import 'package:hackatonapp/screens/prediction_result_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = Provider.of<UserProvider>(context, listen: false).usuario;
+      if (user != null) {
+        Provider.of<HistoryProvider>(context, listen: false).loadAntecedentes(user.id!);
+        Provider.of<EventProvider>(context, listen: false).loadEventos(user.id!);
+      }
+    });
+  }
 
   Future<void> _exportData(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -18,38 +36,25 @@ class ProfileScreen extends StatelessWidget {
       final allData = await DatabaseHelper.instance.getAllData();
       final jsonData = jsonEncode(allData);
 
-      // TODO: Replace with your actual endpoint
       final response = await http.post(
-        Uri.parse('https://example.com/export'),
+        Uri.parse('https://example.com/export'), // Placeholder
         headers: {'Content-Type': 'application/json'},
         body: jsonData,
       );
 
       if (response.statusCode == 200) {
-        scaffoldMessenger.showSnackBar(
-          const SnackBar(content: Text('Datos exportados con éxito')),
-        );
+        scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Datos exportados con éxito')));
       } else {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error al exportar: ${response.statusCode}')),
-        );
+        scaffoldMessenger.showSnackBar(SnackBar(content: Text('Error al exportar: ${response.statusCode}')));
       }
     } catch (e) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.usuario;
-
-    if (user != null) {
-      // Load antecedents when the user is available
-      Provider.of<HistoryProvider>(context, listen: false).loadAntecedentes(user.id!);
-    }
+    final user = Provider.of<UserProvider>(context).usuario;
 
     return ListView(
       children: [
@@ -82,10 +87,7 @@ class ProfileScreen extends StatelessWidget {
           builder: (context, historyProvider, child) {
             final antecedents = historyProvider.antecedentes;
             if (antecedents.isEmpty) {
-              return const Center(child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('No hay antecedentes registrados.'),
-              ));
+              return const Center(child: Padding(padding: EdgeInsets.all(8.0), child: Text('No hay antecedentes registrados.')));
             }
             return Column(
               children: antecedents.map((antecedent) => ListTile(
@@ -107,14 +109,11 @@ class ProfileScreen extends StatelessWidget {
           builder: (context, eventProvider, child) {
             final eventos = eventProvider.eventos;
             if (eventos.isEmpty) {
-              return const Center(child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Aún no has registrado ningún caso.'),
-              ));
+              return const Center(child: Padding(padding: EdgeInsets.all(8.0), child: Text('Aún no has registrado ningún caso.')));
             }
             return ListView.builder(
-              shrinkWrap: true, // Important for nested ListViews
-              physics: const NeverScrollableScrollPhysics(), // Disable scrolling for the inner ListView
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: eventos.length,
               itemBuilder: (context, index) {
                 final evento = eventos[index];
@@ -126,12 +125,20 @@ class ProfileScreen extends StatelessWidget {
                     subtitle: Text('Registrado el: ${evento.fecha.day}/${evento.fecha.month}/${evento.fecha.year}'),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
+                      final classificationEnum = DengueClassification.values.firstWhere(
+                        (e) => e.name == evento.classification,
+                        orElse: () => DengueClassification.grupoA,
+                      );
+
+                      final result = ClassificationResult(
+                        classification: classificationEnum,
+                        tieneFactorRiesgo: evento.tieneFactorRiesgo,
+                        classificationName: ClassificationHelper.getClassificationName(classificationEnum),
+                        recommendations: ClassificationHelper.getRecommendationsByClassification(classificationEnum),
+                      );
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => PredictionResultScreen(
-                            evento: evento,
-                            sintomasPositivos: evento.sintomas,
-                          ),
+                          builder: (context) => PredictionResultScreen(result: result),
                         ),
                       );
                     },

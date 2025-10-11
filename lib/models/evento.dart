@@ -8,10 +8,11 @@ class Evento {
   final DateTime fecha;
   final List<Sintoma> sintomas;
   final bool reportado;
-
-  final String documentoPersona;
-  final bool esUsuarioPrincipal;
+  final String documento_persona;
+  final bool es_usuario_principal;
   final String? parentesco;
+  final String classification; // e.g., 'grupoA', 'grupoB'
+  final bool tieneFactorRiesgo;
 
   Evento({
     this.id,
@@ -21,9 +22,11 @@ class Evento {
     required this.fecha,
     required this.sintomas,
     this.reportado = false,
-    required this.documentoPersona,
-    required this.esUsuarioPrincipal,
+    required this.documento_persona,
+    required this.es_usuario_principal,
     this.parentesco,
+    required this.classification,
+    required this.tieneFactorRiesgo,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,9 +36,28 @@ class Evento {
       'tipoEventoId': tipoEventoId,
       'ubicacionId': ubicacionId,
       'fecha': fecha.toIso8601String(),
-      'documento_persona': documentoPersona,
-      'es_usuario_principal': esUsuarioPrincipal ? 1 : 0,
+      'documento_persona': documento_persona,
+      'es_usuario_principal': es_usuario_principal ? 1 : 0,
       'parentesco': parentesco,
+      'classification': classification,
+      'tieneFactorRiesgo': tieneFactorRiesgo ? 1 : 0,
     };
+  }
+
+  factory Evento.fromMap(Map<String, dynamic> map) {
+    return Evento(
+      id: map['id'],
+      usuarioId: map['usuarioId'],
+      tipoEventoId: map['tipoEventoId'],
+      ubicacionId: map['ubicacionId'],
+      fecha: DateTime.parse(map['fecha']),
+      sintomas: [], // Note: Symptoms are not fetched here
+      reportado: map['reportado'] == 1,
+      documento_persona: map['documento_persona'],
+      es_usuario_principal: map['es_usuario_principal'] == 1,
+      parentesco: map['parentesco'],
+      classification: map['classification'],
+      tieneFactorRiesgo: map['tieneFactorRiesgo'] == 1,
+    );
   }
 }
