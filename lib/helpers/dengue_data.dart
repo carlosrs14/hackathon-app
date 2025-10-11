@@ -63,7 +63,7 @@ List<DiseaseData> diseaseData() {
     transmissionsWays: [
       "La enfermiedad se transmite d por la picadura de la hembra infectada del mosquito del género Aedes y un huésped susceptible. En colombia se registra como el principal vector de virus el mosquito Aedes aegypti"
     ],
-    photos: ["assets/mosquito.jpg"],
+    photos: ["assets/dengue.jpg"],
     recomendations: [
       "Tapa todas las aguas limpias que estén descubiertas",
       "Usa repelente de insectos",
