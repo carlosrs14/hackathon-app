@@ -21,13 +21,18 @@ version: 1.0.0+1
 environment:
   sdk: ^3.8.1
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.jpg"
 
 flutter_native_splash:
   color: "#012030" # color de fondo del splash
-  image: assets/logo.png # tu logo (debe existir en esa ruta)
+  image: assets/logo.jpg # tu logo (debe existir en esa ruta)
   android_12:
-    image: assets/logo.png
+    image: assets/logo.jpg
     color: "#012030"
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -46,6 +51,7 @@ dependencies:
   provider: ^6.1.2
   http: ^1.2.1
   flutter_native_splash: ^2.4.6
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:

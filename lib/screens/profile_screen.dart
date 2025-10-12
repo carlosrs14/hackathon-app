@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hackatonapp/helpers/classification_helper.dart';
-import 'package:hackatonapp/helpers/database_helper.dart';
 import 'package:hackatonapp/providers/event_provider.dart';
 import 'package:hackatonapp/providers/history_provider.dart';
 import 'package:hackatonapp/providers/user_provider.dart';
@@ -43,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return ListView(
       children: [
-        // --- User Info Section ---
         if (user == null)
           const ListTile(title: Text('Cargando usuario...'))
         else
@@ -58,7 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         const Divider(),
 
-        // --- Medical History Section ---
         ListTile(
           title: Text('Mis Antecedentes', style: Theme.of(context).textTheme.titleLarge),
           trailing: ElevatedButton(
@@ -85,7 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         const Divider(),
 
-        // --- Registered Events Section ---
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text('Mis Casos Registrados', style: Theme.of(context).textTheme.titleLarge),
@@ -136,7 +131,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         const Divider(),
 
-        // --- Export Button ---
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton.icon(
